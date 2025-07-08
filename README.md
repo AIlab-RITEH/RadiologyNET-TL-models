@@ -1,28 +1,48 @@
+
+<div align="center">
+  <img src="assets/radiologynet_logo.jpg" alt="RadiologyNET Logo"/>
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  <img src="assets/ai_lab.png" alt="RITEH AI Lab Logo"/>
+</div>
+
+
 # RadiologyNET Foundation Models
 
-Welcome to the offical repository of RadiologyNET foundation models.
+Welcome to the official repository of RadiologyNET foundation models.  
 
+[RadiologyNET](https://www.nature.com/articles/s41598-025-05009-w) is a large-scale, [pseudo-labelled](https://biodatamining.biomedcentral.com/articles/10.1186/s13040-024-00373-1) medical imaging dataset, comprising over 1.9 million DICOM-derived images spanning various anatomical regions and imaging modalities (MR, CT, CR, RF, XA). The dataset was used to pretrain several widely used neural network architectures, which were then evaluated across multiple downstream tasks. The models were pretrained using [PyTorch](https://pytorch.org/).
 
-[RadiologyNET](https://biodatamining.biomedcentral.com/articles/10.1186/s13040-024-00373-1) is a large dataset consisting of ~1.3 mil. DICOM files, mostly chest/head MR and CT images. This dataset was used to pretrain several popular architectures that were evaluated on several publicly available datasets, which cover a range of anatomical regions (hand, wrist, head, lungs, chest) and imaging modalities (MR, CR, CT). The models were pretrained using [PyTorch](https://pytorch.org/).
+These pretrained models are made publicly available to support further research and development in medical transfer learning.
 
+### Contents:
+1. [Evaluation and Findings](#evaluation)
+2. [Usage](#usage)
+3. [Download](#download)
+4. [Tested Challenges](#challenges)
+5. [Notes & Limitations](#notes)
+6. [Citation](#citation)
 
+---
 
-## Evaluation
-These models were evaluated on five publicly available datasets, against those pretrained on ImageNet and those pretrained on randomly initialised weights (i.e. *Baseline*).
+<a id="evaluation"></a>
+## Evaluation and Findings
 
-When resources (i.e. training time and training data) were not restriced, the obtained metrics of the three approaches did not differ statistically. However, we found that RadiologyNET models could prove beneficial in resource-limited conditions, and could give a boost in the performance during the first few epochs of training. 
+RadiologyNET models were benchmarked against ImageNet-pretrained and randomly initialised (Baseline) models on five publicly available medical datasets. Key findings:
 
-![Brain Tumor MRI - Performance in first 10 epochs of training](assets/BRAIN_TUMOR__AVERAGE_training_progress_IN_FIRST_10_EPOCHS__valid_set__['res50',%20'mobileNetV3Small']__partitions-[1].png)
+- When training resources were unrestricted, RadiologyNET and ImageNet models achieved comparable performance. 
+- RadiologyNET showed advantages under resource-limited conditions (e.g., early training stages, small datasets).
+- Multi-modality pretraining generally yielded better generalisation than single-modality alternatives, but this depended on the intra-domain variability of each modality. Where a single modality was sufficiently diverse, there was no significant benefit from incorporating other modalities into the pretraining dataset.
+- High-quality manual labelling (e.g. [RadImageNet](https://www.radimagenet.com/)) remains the gold standard.
 
-**Fig.1**: Average performance of best-performing models across first 10 epochs on the Brain Tumor MRI dataset. Results per each epoch are averaged across five runs.
+![Brain Tumor MRI](assets/BRAIN_TUMOR__AVERAGE_training_progress_IN_FIRST_10_EPOCHS__valid_set__['res50',%20'mobileNetV3Small']__partitions-[1].png)
+**Fig.1**: Validation performance during the first 10 epochs on Brain Tumor MRI. Averaged across five runs.
 
+![COVID-19](assets/COVID19__AVERAGE_training_progress_IN_FIRST_10_EPOCHS__valid_set__['res18',%20'mobileNetV3Large']__partitions-[1].png)
+**Fig.2**: Validation performance during the first 10 epochs on COVID-19 dataset. Averaged across five runs.
 
+---
 
-![COVID-19 - Performance in first 10 epochs of training](assets/COVID19__AVERAGE_training_progress_IN_FIRST_10_EPOCHS__valid_set__['res18',%20'mobileNetV3Large']__partitions-[1].png)
-
-**Fig.2**: Average performance of best-performing models across first 10 epochs on the COVID-19 dataset. Results per each epoch are averaged across five runs.
-
-
+<a id="usage"></a>
 ## Usage
 
 The `Example.ipynb` notebook in the `./usage/` directory demonstrates how to load weights into your model.
@@ -82,6 +102,7 @@ The models (pytorch weights) are packaged into `.tar.gz` archives and are availa
 | VGG16            | 1.21 GiB   | [Download](http://radiologynet.riteh.hr/models/VGG16.tar.gz)            |
 
 
+<a id="challenges"></a>
 ## Challenges
 The following challenges have been used to evaluate the performance of RadiologyNET foundation models. Brain Tumor MRI is described in detail in the `./datasets/` folder, with a MinimalWorkingSample.ipynb available for easier reproducibility.
 
@@ -90,3 +111,48 @@ The following challenges have been used to evaluate the performance of Radiology
 * [GRAZPEDWRI-DX](https://www.nature.com/articles/s41597-022-01328-z)
 * [RSNA Pediatric Bone Age Challenge 2017](https://www.rsna.org/rsnai/ai-image-challenge/rsna-pediatric-bone-age-challenge-2017)
 * [LUng Nodule Analysis Challenge](https://luna16.grand-challenge.org/Data/)
+
+<a id="notes"></a>
+#### Notes & Limitations
+- RadiologyNET labels were generated using an unsupervised clustering of image, DICOM, and diagnosis text features.
+- The current version is based on a single-institution dataset. Contributions of multi-centre datasets may be included in future iterations.
+- For more details, we refer the reader to the [full publication](https://doi.org/10.1038/s41598-025-05009-w) published in *Scientific Reports*.
+
+<a id="citation"></a>
+## Citation
+If you use these models, please cite (BibTeX):
+``` 
+@article{Napravnik2025,
+  title = {Lessons learned from RadiologyNET foundation models for transfer learning in medical radiology},
+  volume = {15},
+  ISSN = {2045-2322},
+  url = {http://dx.doi.org/10.1038/s41598-025-05009-w},
+  DOI = {10.1038/s41598-025-05009-w},
+  number = {1},
+  journal = {Scientific Reports},
+  publisher = {Springer Science and Business Media LLC},
+  author = {Napravnik,  Mateja and Hržić,  Franko and Urschler,  Martin and Miletić,  Damir and Štajduhar,  Ivan},
+  year = {2025},
+  month = jul 
+}
+
+@article{Napravnik2024,
+  title = {Building RadiologyNET: an unsupervised approach to annotating a large-scale multimodal medical database},
+  volume = {17},
+  ISSN = {1756-0381},
+  url = {http://dx.doi.org/10.1186/s13040-024-00373-1},
+  DOI = {10.1186/s13040-024-00373-1},
+  number = {1},
+  journal = {BioData Mining},
+  publisher = {Springer Science and Business Media LLC},
+  author = {Napravnik,  Mateja and Hržić,  Franko and Tschauner,  Sebastian and Štajduhar,  Ivan},
+  year = {2024},
+  month = jul 
+}
+```
+
+> 📄 **Reference**:  
+> Napravnik M, Hržić F, Urschler M, Miletić D, Štajduhar I.  
+> *Lessons learned from RadiologyNET foundation models for transfer learning in medical radiology*.  
+> Scientific Reports 15, 21622 (2025).  
+> https://doi.org/10.1038/s41598-025-05009-w
